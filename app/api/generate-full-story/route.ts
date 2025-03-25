@@ -27,23 +27,23 @@ export async function POST(request: NextRequest) {
       "title": "Story Title",
       "panels": [
         {
-          "imagePrompt": "Detailed description for cover image generation with Mingming as the main subject and focal point, plus any necessary guidelines (do not describe Mingming's appearance or species, just refer to him as MINGK)",
+          "imagePrompt": "Detailed description for cover image generation with Mingming as the main subject and focal point, plus any necessary guidelines, plus emphasis on ONLY ONE MINKG dog (other dogs should look different) (do not describe Mingming's appearance or species, just refer to him as MINGK)",
           "text": "Story Title"
         },
         {
-          "imagePrompt": "Detailed description for panel 2 image that directly illustrates the caption text, plus any necessary guidelines (do not describe Mingming's appearance or species, just refer to him as MINGK)",
+          "imagePrompt": "Detailed description for panel 2 image that directly illustrates the caption text, plus any necessary guidelines, plus emphasis on ONLY ONE MINKG dog (other dogs should look different) (do not describe Mingming's appearance or species, just refer to him as MINGK)",
           "text": "Caption text for panel 2"
         },
         {
-          "imagePrompt": "Detailed description for panel 3 image that directly illustrates the caption text, plus any necessary guidelines (do not describe Mingming's appearance or species, just refer to him as MINGK)",
+          "imagePrompt": "Detailed description for panel 3 image that directly illustrates the caption text, plus any necessary guidelines, plus emphasis on ONLY ONE MINKG dog (other dogs should look different) (do not describe Mingming's appearance or species, just refer to him as MINGK)",
           "text": "Caption text for panel 3"
         },
         {
-          "imagePrompt": "Detailed description for panel 4 image that directly illustrates the caption text, plus any necessary guidelines (do not describe Mingming's appearance or species, just refer to him as MINGK)",
+          "imagePrompt": "Detailed description for panel 4 image that directly illustrates the caption text, plus any necessary guidelines, plus emphasis on ONLY ONE MINKG dog (other dogs should look different) (do not describe Mingming's appearance or species, just refer to him as MINGK)",
           "text": "Caption text for panel 4"
         },
         {
-          "imagePrompt": "Detailed description for panel 5 image that directly illustrates the caption text, plus any necessary guidelines (do not describe Mingming's appearance or species, just refer to him as MINGK)",
+          "imagePrompt": "Detailed description for panel 5 image that directly illustrates the caption text, plus any necessary guidelines, plus emphasis on ONLY ONE MINKG dog (other dogs should look different) (do not describe Mingming's appearance or species, just refer to him as MINGK)",
           "text": "Caption text for panel 5"
         }
       ]
