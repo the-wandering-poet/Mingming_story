@@ -5,7 +5,7 @@ import Link from "next/link"
 import Image from "next/image"
 import { useRouter, useSearchParams } from "next/navigation"
 import { Button } from "@/components/ui/button"
-import { ChevronRight, ChevronLeft } from "lucide-react"
+import { ChevronRight, ChevronLeft, RefreshCw } from "lucide-react"
 
 export default function StoryPage() {
   const router = useRouter()
@@ -28,6 +28,7 @@ export default function StoryPage() {
   
   const [loading, setLoading] = useState(true)
   const [currentPage, setCurrentPage] = useState(0)
+  const [regeneratingImage, setRegeneratingImage] = useState<number | null>(null)
 
   useEffect(() => {
     const loadStoryData = () => {
@@ -90,6 +91,70 @@ export default function StoryPage() {
     }
   }
 
+  const handleRegenerateImage = async (panelIndex: number) => {
+    if (!storyData?.panels?.[panelIndex] || !storyData.style) return;
+    
+    try {
+      setRegeneratingImage(panelIndex);
+      
+      const response = await fetch('/api/regenerate-image', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          imagePrompt: storyData.panels[panelIndex].imagePrompt,
+          imageStyle: storyData.style
+        }),
+      });
+      
+      if (!response.ok) {
+        throw new Error('Failed to regenerate image');
+      }
+      
+      const data = await response.json();
+      
+      if (data.imageUrl) {
+        // Update the story data with the new image URL
+        const updatedPanels = [...storyData.panels];
+        updatedPanels[panelIndex] = {
+          ...updatedPanels[panelIndex],
+          imageUrl: data.imageUrl
+        };
+        
+        const updatedStoryData = {
+          ...storyData,
+          panels: updatedPanels
+        };
+        
+        // Update state
+        setStoryData(updatedStoryData);
+        
+        // Update in localStorage
+        localStorage.setItem('currentStory', JSON.stringify(updatedStoryData));
+        
+        // If this is the story with the current ID, update it in the stories list too
+        if (storyId) {
+          const savedStories = localStorage.getItem('mingmingStories');
+          if (savedStories) {
+            const allStories = JSON.parse(savedStories);
+            const storyIndex = allStories.findIndex((s: any) => s.id === storyId);
+            
+            if (storyIndex !== -1 && panelIndex === 0) {
+              // If this is the cover image, update the thumbnail in the stories list
+              allStories[storyIndex].imageUrl = data.imageUrl;
+              localStorage.setItem('mingmingStories', JSON.stringify(allStories));
+            }
+          }
+        }
+      }
+    } catch (error) {
+      console.error('Error regenerating image:', error);
+    } finally {
+      setRegeneratingImage(null);
+    }
+  };
+
   if (loading || !storyData) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -143,7 +208,7 @@ export default function StoryPage() {
           {currentPage === 0 ? (
             // Cover page
             <div className="relative bg-black rounded-b-lg overflow-hidden">
-              <div className="max-h-[400px] overflow-hidden">
+              <div className="max-h-[400px] overflow-hidden relative">
                 <Image
                   src={storyData?.panels?.[0]?.imageUrl || "/images/placeholder.jpg"}
                   width={400}
@@ -151,6 +216,18 @@ export default function StoryPage() {
                   alt={storyData?.panels?.[0]?.text || "Story image"}
                   className="w-full h-auto object-contain mx-auto"
                 />
+                
+                {/* Refresh button */}
+                <button 
+                  onClick={() => handleRegenerateImage(0)}
+                  disabled={regeneratingImage === 0}
+                  className="absolute top-2 right-2 bg-white/80 hover:bg-white p-2 rounded-full shadow-md transition-all"
+                  aria-label="Regenerate image"
+                >
+                  <RefreshCw 
+                    className={`h-5 w-5 text-[#4a4494] ${regeneratingImage === 0 ? 'animate-spin' : ''}`} 
+                  />
+                </button>
               </div>
 
               <div className="absolute bottom-0 left-0 right-0 bg-[#4a4494] bg-opacity-80 p-6">
@@ -165,8 +242,8 @@ export default function StoryPage() {
               <div className="grid md:grid-cols-2 gap-6">
                 {/* First panel on this page */}
                 <div className="border rounded-lg overflow-hidden">
-                  <div className="p-4">
-                    <div className="max-h-[300px] overflow-hidden">
+                  <div className="p-4 relative">
+                    <div className="max-h-[300px] overflow-hidden relative">
                       <Image
                         src={storyData.panels?.[currentPage * 2 - 1]?.imageUrl || "/images/placeholder.jpg"}
                         width={300}
@@ -174,6 +251,18 @@ export default function StoryPage() {
                         alt={storyData.panels?.[currentPage * 2 - 1]?.text || "Story image"}
                         className="w-full h-auto object-contain mx-auto"
                       />
+                      
+                      {/* Refresh button */}
+                      <button 
+                        onClick={() => handleRegenerateImage(currentPage * 2 - 1)}
+                        disabled={regeneratingImage === (currentPage * 2 - 1)}
+                        className="absolute top-2 right-2 bg-white/80 hover:bg-white p-2 rounded-full shadow-md transition-all"
+                        aria-label="Regenerate image"
+                      >
+                        <RefreshCw 
+                          className={`h-5 w-5 text-[#4a4494] ${regeneratingImage === (currentPage * 2 - 1) ? 'animate-spin' : ''}`} 
+                        />
+                      </button>
                     </div>
                     <p className="text-gray-700 mt-4">{storyData.panels?.[currentPage * 2 - 1]?.text || ""}</p>
                   </div>
@@ -182,8 +271,8 @@ export default function StoryPage() {
                 {/* Second panel on this page (if available) */}
                 {storyData.panels?.[currentPage * 2] && (
                   <div className="border rounded-lg overflow-hidden">
-                    <div className="p-4">
-                      <div className="max-h-[300px] overflow-hidden">
+                    <div className="p-4 relative">
+                      <div className="max-h-[300px] overflow-hidden relative">
                         <Image
                           src={storyData.panels?.[currentPage * 2]?.imageUrl || "/images/placeholder.jpg"}
                           width={300}
@@ -191,6 +280,18 @@ export default function StoryPage() {
                           alt={storyData.panels?.[currentPage * 2]?.text || "Story image"}
                           className="w-full h-auto object-contain mx-auto"
                         />
+                        
+                        {/* Refresh button */}
+                        <button 
+                          onClick={() => handleRegenerateImage(currentPage * 2)}
+                          disabled={regeneratingImage === (currentPage * 2)}
+                          className="absolute top-2 right-2 bg-white/80 hover:bg-white p-2 rounded-full shadow-md transition-all"
+                          aria-label="Regenerate image"
+                        >
+                          <RefreshCw 
+                            className={`h-5 w-5 text-[#4a4494] ${regeneratingImage === (currentPage * 2) ? 'animate-spin' : ''}`} 
+                          />
+                        </button>
                       </div>
                       <p className="text-gray-700 mt-4">{storyData.panels?.[currentPage * 2]?.text || ""}</p>
                     </div>
