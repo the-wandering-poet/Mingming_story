@@ -17,8 +17,8 @@ export async function POST(request: NextRequest) {
     // Step 1: Generate story content with OpenAI
     const systemPrompt = `You are a creative children's story writer specializing in stories about a dog named Mingming.
     Create a story with EXACTLY 5 panels (no more, no less):
-    - Panel 1: A cover image with a title that captures the key themes. IMPORTANT: The cover image MUST prominently feature MINGK the dog as the main subject.
-    - Panels 2-5: Each with an image description and a few lines of caption text
+    - Panel 1: A cover image with a title that captures the key themes. IMPORTANT: The cover image MUST prominently feature Mingming as the main subject.
+    - Panels 2-5: Each with an image description and a few lines of caption text of the story.
     
     The story should be age-appropriate, engaging, and follow the theme provided.
     
@@ -27,23 +27,23 @@ export async function POST(request: NextRequest) {
       "title": "Story Title",
       "panels": [
         {
-          "imagePrompt": "Detailed description for cover image generation with MINGK the dog as the main subject and focal point (do not describe Mingming's appearance or species, just refer to him as MINGK)",
+          "imagePrompt": "Detailed description for cover image generation with Mingming as the main subject and focal point, plus any necessary guidelines (do not describe Mingming's appearance or species, just refer to him as MINGK)",
           "text": "Story Title"
         },
         {
-          "imagePrompt": "Detailed description for panel 2 image that directly illustrates the caption text (do not describe Mingming's appearance or species, just refer to him as MINGK)",
+          "imagePrompt": "Detailed description for panel 2 image that directly illustrates the caption text, plus any necessary guidelines (do not describe Mingming's appearance or species, just refer to him as MINGK)",
           "text": "Caption text for panel 2"
         },
         {
-          "imagePrompt": "Detailed description for panel 3 image that directly illustrates the caption text (do not describe Mingming's appearance or species, just refer to him as MINGK)",
+          "imagePrompt": "Detailed description for panel 3 image that directly illustrates the caption text, plus any necessary guidelines (do not describe Mingming's appearance or species, just refer to him as MINGK)",
           "text": "Caption text for panel 3"
         },
         {
-          "imagePrompt": "Detailed description for panel 4 image that directly illustrates the caption text (do not describe Mingming's appearance or species, just refer to him as MINGK)",
+          "imagePrompt": "Detailed description for panel 4 image that directly illustrates the caption text, plus any necessary guidelines (do not describe Mingming's appearance or species, just refer to him as MINGK)",
           "text": "Caption text for panel 4"
         },
         {
-          "imagePrompt": "Detailed description for panel 5 image that directly illustrates the caption text (do not describe Mingming's appearance or species, just refer to him as MINGK)",
+          "imagePrompt": "Detailed description for panel 5 image that directly illustrates the caption text, plus any necessary guidelines (do not describe Mingming's appearance or species, just refer to him as MINGK)",
           "text": "Caption text for panel 5"
         }
       ]
@@ -52,27 +52,21 @@ export async function POST(request: NextRequest) {
     IMPORTANT:
     - You MUST create EXACTLY 5 panels, numbered 1 through 5
     - Each panel MUST have both an imagePrompt and text field
-    - In image Prompt, refer to the dog as 'MINGK the dog'. But in caption text, refer to the dog as 'Mingming'.
+    - In image Prompt, refer to the dog as 'the MINGK dog'. But in caption text, refer to the dog as 'Mingming'.
     - DO NOT include markdown formatting, code blocks, or backticks in your response
     - Return ONLY the JSON object with no additional text
     
     IMPORTANT GUIDELINES FOR IMAGE PROMPTS:
-    1. Always refer to the dog as "MINGK the dog" in image prompts
-    2. Each image prompt MUST feature EXACTLY ONE MINGK the dog as the main subject
+    1. Always refer to the dog as "the MINGK dog" in image prompts
+    2. Each image prompt MUST feature EXACTLY ONE the MINGK dog as the main subject. Specify in the image prompt no duplicate of the MINGK dogs. If more than one dogs are in the image, they should look different.
     3. ALWAYS ensure the image prompt directly illustrates the caption text. Make image prompts detailed and vivid, but focus on the scene and action
-    4. NEVER describe what kind of dog MINGK is or any physical characteristics
+    4. NEVER describe what kind of dog the MINGK dog is or any physical characteristics
     5. Start each image prompt with "${imageStyle} style"
-    6. DO NOT include descriptions of MINGK the dog's families
+    6. DO NOT include descriptions of the MINGK dog's families
+    7. Specify in the image prompt NO text or words allowed in the image. REMOVE all texts in the image.
     `;
 
-    const enhancedUserPrompt = `Create a story about ${storySubject} in the style of ${storyType}.
-
-    IMPORTANT GUIDELINES:
-    1. Each image prompt MUST directly illustrate its corresponding caption text
-    2. Each image prompt MUST feature EXACTLY ONE MINGK dog as the main subject
-    3. All image prompts should start with "${imageStyle} style"
-    4. DO NOT include markdown formatting, code blocks, or backticks in your response
-    5. Return ONLY the JSON object with no additional text`;
+    const enhancedUserPrompt = `Create a story about ${storySubject} in the style of ${storyType}.`;
 
     const completion = await openai.chat.completions.create({
       model: "gpt-4o",
@@ -115,7 +109,7 @@ export async function POST(request: NextRequest) {
     while (storyContent.panels.length < 5) {
       const panelNumber = storyContent.panels.length + 1;
       storyContent.panels.push({
-        imagePrompt: `${imageStyle} style MINGK the dog as the main subject in a scene for panel ${panelNumber}.`,
+        imagePrompt: `${imageStyle} style the MINGK dog as the main subject in a scene for panel ${panelNumber}.`,
         text: panelNumber === 1 ? (storyContent.title || "Mingming's Adventure") : `Panel ${panelNumber}`
       });
     }
