@@ -1,13 +1,14 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, Suspense } from "react"
 import Link from "next/link"
 import Image from "next/image"
 import { useRouter, useSearchParams } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { ChevronRight, ChevronLeft, RefreshCw } from "lucide-react"
 
-export default function StoryPage() {
+// Create a client component that uses useSearchParams
+function StoryContent() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const storyId = searchParams.get('id')
@@ -328,6 +329,15 @@ export default function StoryPage() {
         </div>
       </main>
     </div>
+  )
+}
+
+// Main page component with Suspense boundary
+export default function StoryPage() {
+  return (
+    <Suspense fallback={<div>Loading story...</div>}>
+      <StoryContent />
+    </Suspense>
   )
 }
 
