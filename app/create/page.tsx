@@ -14,7 +14,7 @@ export default function CreateStory() {
   const [storyType, setStoryType] = useState("adventure")
   const [imageStyle, setImageStyle] = useState("realistic")
   const [isGenerating, setIsGenerating] = useState(false)
-  const [error, setError] = useState("")
+  const [error, setError] = useState("") // Used to display error messages to the user
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
@@ -144,17 +144,30 @@ export default function CreateStory() {
             <div className="space-y-4">
               <h2 className="text-2xl font-bold text-[#4a4494]">2. Story Type</h2>
               <div className="grid grid-cols-3 gap-5">
-                {["Adventure", "Family fun", "Educational"].map((type) => (
+                {[
+                  { name: "Adventure", path: "/images/adventure.jpg" },
+                  { name: "Family fun", path: "/images/family-fun.jpg" },
+                  { name: "Educational", path: "/images/educational.jpg" }
+                ].map((type) => (
                   <div
-                    key={type}
-                    onClick={() => setStoryType(type.toLowerCase())}
+                    key={type.name}
+                    onClick={() => setStoryType(type.name.toLowerCase())}
                     className={`relative cursor-pointer rounded-2xl overflow-hidden h-40 ${
-                      storyType === type.toLowerCase() ? "ring-4 ring-[#6c4ed9]" : ""
+                      storyType === type.name.toLowerCase() ? "ring-4 ring-[#6c4ed9]" : ""
                     }`}
                   >
-                    <Image src="/placeholder.svg?height=200&width=150" fill alt={type} className="object-cover" />
+                    <Image 
+                      src={type.path} 
+                      alt={type.name}
+                      fill
+                      className="object-cover"
+                      onError={(e) => {
+                        console.error(`Failed to load image: ${type.path}`);
+                        e.currentTarget.src = "/placeholder.svg?height=200&width=150";
+                      }}
+                    />
                     <div className="absolute inset-0 bg-black/30 flex items-end p-3">
-                      <span className="text-white font-medium">{type}</span>
+                      <span className="text-white font-medium">{type.name}</span>
                     </div>
                   </div>
                 ))}
@@ -166,17 +179,30 @@ export default function CreateStory() {
             <div className="space-y-4">
               <h2 className="text-2xl font-bold text-[#4a4494]">3. Image Style</h2>
               <div className="grid grid-cols-3 gap-4">
-                {["Realistic", "3D Cartoon", "Water Color"].map((style) => (
+                {[
+                  { name: "Realistic", path: "/images/realistic.jpg" },
+                  { name: "3D Cartoon", path: "/images/3d-cartoon.jpg" },
+                  { name: "Water Color", path: "/images/water-color.jpg" }
+                ].map((style) => (
                   <div
-                    key={style}
-                    onClick={() => setImageStyle(style)}
+                    key={style.name}
+                    onClick={() => setImageStyle(style.name.toLowerCase())}
                     className={`relative cursor-pointer rounded-2xl overflow-hidden h-32 ${
-                      imageStyle === style ? "ring-4 ring-[#6c4ed9]" : ""
+                      imageStyle === style.name.toLowerCase() ? "ring-4 ring-[#6c4ed9]" : ""
                     }`}
                   >
-                    <Image src="/placeholder.svg?height=150&width=150" fill alt={style} className="object-cover" />
+                    <Image 
+                      src={style.path} 
+                      alt={style.name}
+                      fill
+                      className="object-cover"
+                      onError={(e) => {
+                        console.error(`Failed to load image: ${style.path}`);
+                        e.currentTarget.src = "/placeholder.svg?height=150&width=150";
+                      }}
+                    />
                     <div className="absolute inset-0 bg-black/30 flex items-end p-3">
-                      <span className="text-white font-medium">{style}</span>
+                      <span className="text-white font-medium">{style.name}</span>
                     </div>
                   </div>
                 ))}

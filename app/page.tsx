@@ -48,7 +48,7 @@ export default function Home() {
               Craft Magical Stories of Mingming in Seconds
             </h1>
             <p className="text-[#4a4494] text-lg md:text-xl max-w-md">
-              Create fun and personalised stories that bring Mingming's adventures to life. It only takes a few seconds!
+              Create fun and personalised stories that bring Mingming&apos;s adventures to life. It only takes a few seconds!
             </p>
             <div className="pt-3">
               <Link href="/create">

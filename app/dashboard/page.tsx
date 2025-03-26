@@ -16,7 +16,7 @@ interface StoryCard {
 export default function Dashboard() {
   const [stories, setStories] = useState<StoryCard[]>([])
   const [loading, setLoading] = useState(true)
-  const [credits, setCredits] = useState(72)
+  const [credits, setCredits] = useState(72) // Will be used for credit management in future
 
   useEffect(() => {
     // Load stories from localStorage

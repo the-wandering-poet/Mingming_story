@@ -138,7 +138,7 @@ export default function StoryPage() {
           const savedStories = localStorage.getItem('mingmingStories');
           if (savedStories) {
             const allStories = JSON.parse(savedStories);
-            const storyIndex = allStories.findIndex((s: any) => s.id === storyId);
+            const storyIndex = allStories.findIndex((s: {id: string}) => s.id === storyId);
             
             if (storyIndex !== -1 && panelIndex === 0) {
               // If this is the cover image, update the thumbnail in the stories list
