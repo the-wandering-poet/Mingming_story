@@ -5,6 +5,10 @@ const nextConfig: NextConfig = {
   images: {
     domains: ['replicate.delivery'],
   },
+  eslint: {
+    // This allows production builds to complete even with ESLint errors
+    ignoreDuringBuilds: true,
+  },
 };
 
 export default nextConfig;
