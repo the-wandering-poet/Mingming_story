@@ -63,7 +63,7 @@ export default function Home() {
             <div className="absolute inset-0 rounded-2xl overflow-hidden shadow-xl">
               <div className="relative w-full h-full bg-gradient-to-br from-[#8a7ad9]/20 to-[#6c4ed9]/30">
                 <Image
-                  src="/images/storybook-illustration.jpg"
+                  src="/images/storybook-illustration.JPG"
                   fill
                   alt="Storybook illustration of a happy Mingming"
                   className="object-cover rounded-2xl"
